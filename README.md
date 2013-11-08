@@ -14,13 +14,13 @@ Linux:
 
 [327] root@eva:~# aptitude install python-pip
 The following NEW packages will be installed:
-  python-pip python-pkg-resources{a} python-setuptools{a} 
+  python-pip python-pkg-resources{a} python-setuptools{a}
 0 packages upgraded, 3 newly installed, 0 to remove and 18 not upgraded.
 Need to get 648 kB of archives. After unpacking 2,938 kB will be used.
 Do you want to continue? [Y/n/?] y
 Get: 1 http://ftp.es.debian.org/debian/ jessie/main python-pkg-resources all 0.6.49-2 [62.5 kB]
-Get: 2 http://ftp.es.debian.org/debian/ jessie/main python-setuptools all 0.6.49-2 [320 kB]
-Get: 3 http://ftp.es.debian.org/debian/ jessie/main python-pip all 1.4.1-2 [266 kB]
+Get: 2 http://ftp.es.debian.org/debian/ jessie/main python-setuptools all 0.6.49-2 [320 kB
+Get: 3 http://ftp.es.debian.org/debian/ jessie/main python-pip all 1.4.1-2 [266 kB
 Fetched 648 kB in 2s (223 kB/s)       
 Selecting previously unselected package python-pkg-resources.
 (Reading database ... 156790 files and directories currently installed.)
@@ -33,7 +33,7 @@ Processing triggers for man-db ...
 Setting up python-pkg-resources (0.6.49-2) ...
 Setting up python-setuptools (0.6.49-2) ...
 Setting up python-pip (1.4.1-2) ...
-                                         
+                                        
 [328] root@eva:~# easy_install selenium
 Searching for selenium
 Reading http://pypi.python.org/simple/selenium/
