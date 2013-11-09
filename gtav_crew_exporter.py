@@ -17,7 +17,7 @@ username = ''
 password = ''
 crew_name = ''
 output_file = ''
-verbose_flag = '1'
+verbose_flag = ''
 
 #### Class definition
 class crew_member:
@@ -26,8 +26,9 @@ class crew_member:
         self.psn = ''
         self.url = ''
         self.playtime = ''
-        self.language = ''
+        self.country = ''
         self.rank = ''
+        self.crew = ''
 
 #### Function definitions
 
@@ -88,12 +89,9 @@ def WaitForElement(webdriver, path):
 def LoginSocialClub(driver):
 
     if not username or not password:
-        print 'Without login and password, only username and rank are available:'
-        for cm in crew_members:
-            print cm.rank + ", " + cm.id + ", " + cm.url
-
-        sys.exit('You need to provide login information to view each member info.')
-
+        print '!! Without login and password, only username and rank are available:'
+        return 1
+    
     driver.get(login_url)
         
     path = '//*[@id="submitBtn"]'
@@ -116,7 +114,20 @@ def LoginSocialClub(driver):
     path = '//*[@id="submitBtn"]'
     driver.find_element_by_xpath(path).click()
 
+    driver.get(login_url)
+        
+    path = '//*[@id="panelaccounts"]'
+    result = WaitForElement(driver, path)
+
+    if not result:              # interprets returned value
+    #        driver.close()
+        sys.exit("\nThe page is not loaded yet.")
+    else:
+        debug('web - page fully loaded!')
+
     return 0
+
+
 #### 
 def GetMembersList(driver):
 
@@ -143,13 +154,13 @@ def GetMembersList(driver):
     #    viewall.click()
 
     path = '//a[@class="viewAll"]'
-    viewall = driver.find_element_by_xpath(path)
-
-    if not viewall:
-        debug("web - all users visible.")
-    else:
+    
+    try:
+        viewall = driver.find_element_by_xpath(path)
         debug("web - unfold users.")
         viewall.click()
+    except:
+        debug("web - all users visible.")
 
     path = '//div[contains(@id, "crewRank_")]'
     hierarchy = driver.find_elements_by_xpath(path)
@@ -179,8 +190,55 @@ def GetMembersList(driver):
     return crew_members
 
 #### Function definitions
-def GetMemberInfo(driver, profile_url):
+def GetMemberInfo(driver, member):
+
+    print 'Member: ' + member.id
     
+    ## Load profile page
+    driver.get(member.url)
+        
+    path = '//*[@id="cardInfoVitals"]'
+    result = WaitForElement(driver, path)
+
+    if not result:              # interprets returned value
+    #        driver.close()
+        sys.exit("\nThe page is not loaded yet.")
+    else:
+        debug('web - page fully loaded!')
+
+    ## Check if profile is private
+
+    try:
+        path = '//div[@id="no-profile"]'
+        profail = driver.find_element_by_xpath(path) 
+        print member.id + ' profile is private.'
+        return 1        # Success
+
+    except: 
+        ## Crew Principal
+        path = '//div[@class="crew-info"]/a'
+        member.crew = driver.find_element_by_xpath(path).get_attribute("href").rsplit('/',1)[1]
+
+        print '[' + member.id + '] main crew: ' + member.crew
+
+        try:
+            ## PSN ID
+            path = '//div[@class="PSN"]/h5'
+            member.psn = driver.find_element_by_xpath(path).text
+        except:
+            member.psn = '--'
+
+        print '[' + member.id + '] PSN ID: ' + member.psn
+        
+        try:
+            ## Language
+            path = '//div[@id="cardInfoFooter"]//span[contains(@class,"Country")]'
+            member.country = driver.find_element_by_xpath(path).get_attribute("data-original-title")
+        except:
+            member.country = '--'
+
+        print '[' + member.id + '] country: ' + member.country
+        
     # print sys.exc_info()
     return 0   
 
@@ -193,25 +251,27 @@ if __name__ == "__main__":
     driver = webdriver.Firefox()
 
     crew_members = GetMembersList(driver)
-    #print 'Loaded :' + len(crew_members) + 'members'
-    print len(crew_members)
+    print 'Crew Size: ' + str(len(crew_members)) + ' members'
 
-    LoginSocialClub(driver)
-    
+    error = LoginSocialClub(driver)
 
+    if error:
+        print 'Crew Members :'
+        for cm in crew_members:
+            print cm.rank + ", " + cm.id + ", " + cm.url
+
+        sys.exit('You need to provide login information to view each member info.')
+
+    cnt = 0
+    for cm in crew_members:
+        GetMemberInfo(driver, cm)
+    #    cnt = cnt + 1
+    #    if cnt > 2: sys.exit()
+
+    driver.close()
 #### Log into social club
 
     sys.exit()
-
-
-    #    driver.close()
-
-        #elem = driver.find_element_by_id('viewall')  # Find the muscle list
-        #elem = driver.find_element_by_name('muslceList')  # Find the muscle list
-        #elem.send_keys('seleniumhq' + Keys.RETURN)
-
-    #	driver.quit()
-
 
 
     # Grab URL
