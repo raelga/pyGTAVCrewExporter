@@ -41,6 +41,7 @@ def arg_parser(argv):
     global username
     global password
     global output_file
+    global verbose_flag
     try:
         opts, args = getopt.getopt(argv,"hvu:p:c:o:",["verbose","username","password","crew=","ofile="])
     except getopt.GetoptError:

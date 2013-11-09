@@ -120,6 +120,10 @@ gtav_crew_exporter.py -c <crew_name> [-u <username> -p <password>] [-o <output_f
 
 ### Examples
 
+
+
+#### Only members and ranks
+
 ** [501] rael@mbw:~/ws/gtav_crew_exporter$ ./gtav_crew_exporter.py -c elotrolado **
 
 ```
@@ -142,46 +146,115 @@ muscle, 4LUFLiNT, http://socialclub.rockstargames.com/member/4luflint
 muscle, A_Rebato, http://socialclub.rockstargames.com/member/a_rebato
 ```
 
-** [505] rael@mbw:~/ws/gtav_crew_exporter$ ./gtav_crew_exporter.py -c the_pollasos -u raelga -p *********** **
+#### With member information (need login and password)
+
+** [505] rael@mbw:~/ws/gtav_crew_exporter$ ./gtav_crew_exporter.py -c the_pollasos -u raelga -p xxxxxxxxx **
 
 ```
 ./gtav_crew_exporter.py -c the_pollasos -u raelga -p *********
 Crew: the_pollasos
 Crew Size: 9 members
-Member: adrianrgvez
-[adrianrgvez] main crew: the_pollasos
-[adrianrgvez] PSN ID: --
-[adrianrgvez] country: Spain
-Member: corderius10
-[corderius10] main crew: the_pollasos
-[corderius10] PSN ID: --
-[corderius10] country: Spain
-Member: oscartc14
-[oscartc14] main crew: the_pollasos
-[oscartc14] PSN ID: --
-[oscartc14] country: Spain
-Member: alfi_de_pumarin9
-[alfi_de_pumarin9] main crew: the_pollasos
-[alfi_de_pumarin9] PSN ID: --
-[alfi_de_pumarin9] country: Spain
-Member: capableuncle3020
-capableuncle3020 profile is private.
-Member: rodri799
-[rodri799] main crew: the_pollasos
-[rodri799] PSN ID: --
-[rodri799] country: Spain
-Member: yex_gr
-[yex_gr] main crew: the_pollasos
-[yex_gr] PSN ID: yex_
-[yex_gr] country: Spain
-Member: OrignalBEAST
-[OrignalBEAST] main crew: lossantosdiamondz
-[OrignalBEAST] PSN ID: ORIGNALBEASSTT
-[OrignalBEAST] country: United Kingdom
-Member: raelga
-[raelga] main crew: elotrolado
-[raelga] PSN ID: raelga
-[raelga] country: Spain
+adrianrgvez, Spain, , PS3, the_pollasos, leader, 108,  5D 4H 17M, All ok.
+corderius10, Spain, , PS3, the_pollasos, commissioner, 79,  78H 42M 24S, All ok.
+oscartc14, Spain, , PS3, the_pollasos, lieutenant, 11,  8H 34M 36S, All ok.
+alfi_de_pumarin9, Spain, , PS3, the_pollasos, representative, 24,  17H 23M 9S, All ok.
+capableuncle3020, , , , , representative, , , Private profile.
+rodri799, Spain, , PS3, the_pollasos, representative, 12,  14H 47M 50S, All ok.
+yex_gr, Spain, yex_, PS3, the_pollasos, representative, 21,  24H 50M 26S, All ok.
+OrignalBEAST, United Kingdom, ORIGNALBEASSTT, PS3, lossantosdiamondz, muscle, 24,  48H 40M 23S, All ok.
+raelga, Spain, raelga, PS3, elotrolado, muscle, 65,  6D 13H 53M, All ok.
+```
+
+#### Verbose mode
+
+** [505] rael@mbw:~/ws/gtav_crew_exporter$ ./gtav_crew_exporter.py -c the_pollasos -u raelga -p xxxxxxxxx -v **
+
+```
+./gtav_crew_exporter.py -v -c the_pollasos -u raelga -p pocoyoGTA5
+Crew: the_pollasos
+DBG : web - starting browser
+DBG : web - page fully loaded!
+DBG : web - set page in english.
+DBG : web - all users visible.
+Crew Size: 9 members
+DBG : web - page fully loaded!
+DBG : web - page fully loaded!
+DBG : [adrianrgvez]
+DBG : web - page fully loaded!
+DBG : [adrianrgvez] main crew: the_pollasos
+DBG : [adrianrgvez] PSN ID: 
+DBG : [adrianrgvez] country: Spain
+DBG : web - page fully loaded!
+DBG : [adrianrgvez] rank: leader
+DBG : [adrianrgvez] playtime:  5D 4H 20M
+DBG : [corderius10]
+DBG : web - page fully loaded!
+DBG : [corderius10] main crew: the_pollasos
+DBG : [corderius10] PSN ID: 
+DBG : [corderius10] country: Spain
+DBG : web - page fully loaded!
+DBG : [corderius10] rank: commissioner
+DBG : [corderius10] playtime:  78H 42M 24S
+DBG : [oscartc14]
+DBG : web - page fully loaded!
+DBG : [oscartc14] main crew: the_pollasos
+DBG : [oscartc14] PSN ID: 
+DBG : [oscartc14] country: Spain
+DBG : web - page fully loaded!
+DBG : [oscartc14] rank: lieutenant
+DBG : [oscartc14] playtime:  8H 34M 36S
+DBG : [alfi_de_pumarin9]
+DBG : web - page fully loaded!
+DBG : [alfi_de_pumarin9] main crew: the_pollasos
+DBG : [alfi_de_pumarin9] PSN ID: 
+DBG : [alfi_de_pumarin9] country: Spain
+DBG : web - page fully loaded!
+DBG : [alfi_de_pumarin9] rank: representative
+DBG : [alfi_de_pumarin9] playtime:  17H 23M 9S
+DBG : [capableuncle3020]
+DBG : web - page fully loaded!
+DBG : [capableuncle3020] Profile is private!
+DBG : [rodri799]
+DBG : web - page fully loaded!
+DBG : [rodri799] main crew: the_pollasos
+DBG : [rodri799] PSN ID: 
+DBG : [rodri799] country: Spain
+DBG : web - page fully loaded!
+DBG : [rodri799] rank: representative
+DBG : [rodri799] playtime:  14H 47M 50S
+DBG : [yex_gr]
+DBG : web - page fully loaded!
+DBG : [yex_gr] main crew: the_pollasos
+DBG : [yex_gr] PSN ID: ***
+DBG : [yex_gr] country: Spain
+DBG : web - page fully loaded!
+DBG : [yex_gr] rank: representative
+DBG : [yex_gr] playtime:  24H 50M 26S
+DBG : [OrignalBEAST]
+DBG : web - page fully loaded!
+DBG : [OrignalBEAST] main crew: lossantosdiamondz
+DBG : [OrignalBEAST] PSN ID: ***
+DBG : [OrignalBEAST] country: United Kingdom
+DBG : web - page fully loaded!
+DBG : [OrignalBEAST] rank: muscle
+DBG : [OrignalBEAST] playtime:  48H 40M 23S
+DBG : [raelga]
+DBG : web - page fully loaded!
+DBG : [raelga] main crew: elotrolado
+DBG : [raelga] PSN ID: raelga
+DBG : [raelga] country: Spain
+DBG : web - page fully loaded!
+DBG : [raelga] rank: muscle
+DBG : [raelga] playtime:  6D 13H 53M
+adrianrgvez, Spain, , PS3, the_pollasos, leader, 108,  5D 4H 20M, All ok.
+corderius10, Spain, , PS3, the_pollasos, commissioner, 79,  78H 42M 24S, All ok.
+oscartc14, Spain, , PS3, the_pollasos, lieutenant, 11,  8H 34M 36S, All ok.
+alfi_de_pumarin9, Spain, , PS3, the_pollasos, representative, 24,  17H 23M 9S, All ok.
+capableuncle3020, , , , , representative, , , Private profile.
+rodri799, Spain, , PS3, the_pollasos, representative, 12,  14H 47M 50S, All ok.
+yex_gr, Spain, ****, PS3, the_pollasos, representative, 21,  24H 50M 26S, All ok.
+OrignalBEAST, United Kingdom, ****, PS3, lossantosdiamondz, muscle, 24,  48H 40M 23S, All ok.
+raelga, Spain, raelga, PS3, elotrolado, muscle, 65,  6D 13H 53M, All ok.
 ```
 
 ## And more?
