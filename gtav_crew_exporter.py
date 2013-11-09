@@ -238,9 +238,40 @@ def GetMemberInfo(driver, member):
             member.country = '--'
 
         print '[' + member.id + '] country: ' + member.country
+    
+        driver.get(member.url + '/'+ path_online_url)
+    
+        path = '//div[@id="freemodeRank"]'
+        result = WaitForElement(driver, path)
         
+        if not result:              # interprets returned value
+            #        driver.close()
+            sys.exit("\nThe page is not loaded yet.")
+        else:
+            debug('web - page fully loaded!')
+
+        try:
+            ## Language
+            path = '//div[@id="freemodeRank"]//h3'
+            member.rank = driver.find_element_by_xpath(path).text
+        except:
+            member.rank = '--'
+
+        print '[' + member.id + '] rank: ' + member.rank
+            
+        try:
+            ## Language
+            path = '//div[@id="freemodeRank"]//div[@class="rankBar"]/h4'
+            member.playtime = driver.find_element_by_xpath(path).text.rsplit(':',1)[1]
+        except:
+            member.playtime = '--'
+
+        print '[' + member.id + '] playtime: ' + member.playtime
+    
+        
+
     # print sys.exc_info()
-    return 0   
+    return member 
 
 #### Main function
 
@@ -264,9 +295,12 @@ if __name__ == "__main__":
 
     cnt = 0
     for cm in crew_members:
-        GetMemberInfo(driver, cm)
-    #    cnt = cnt + 1
-    #    if cnt > 2: sys.exit()
+        cm = GetMemberInfo(driver, cm)
+        #cnt = cnt + 1
+        #if cnt > 2: sys.exit()
+
+    for cm in crew_members:
+        print cm.id + ', ' + cm.country + ', ' + cm.psn + ', ' + cm.rank  + ', ' + cm.playtime
 
     driver.close()
 #### Log into social club
