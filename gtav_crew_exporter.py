@@ -10,7 +10,8 @@ import sys, time, re, string, getopt
 default_crew = 'elotrolado'
 login_url = 'https://socialclub.rockstargames.com/profile/signin'
 base_crew_url = 'http://socialclub.rockstargames.com/crew'
-path_online_url = '/games/gtav/career/overview/gtaonline'
+path_gtav_base_url = '/games/gtav'
+path_gtav_overview_url = '/career/overview/gtaonline'
 
 #### Global
 username = ''
@@ -25,10 +26,13 @@ class crew_member:
         self.id = ''
         self.psn = ''
         self.url = ''
+        self.level = ''
         self.playtime = ''
         self.country = ''
         self.rank = ''
         self.crew = ''
+        self.platform = ''
+        self.error = 'All ok.'
 
 #### Function definitions
 
@@ -192,7 +196,7 @@ def GetMembersList(driver):
 #### Function definitions
 def GetMemberInfo(driver, member):
 
-    print 'Member: ' + member.id
+    debug('[' + member.id + ']')
     
     ## Load profile page
     driver.get(member.url)
@@ -211,7 +215,8 @@ def GetMemberInfo(driver, member):
     try:
         path = '//div[@id="no-profile"]'
         profail = driver.find_element_by_xpath(path) 
-        print member.id + ' profile is private.'
+        debug('[' + member.id + '] Profile is private!')
+        member.error = 'Private profile.'
         return 1        # Success
 
     except: 
@@ -219,27 +224,27 @@ def GetMemberInfo(driver, member):
         path = '//div[@class="crew-info"]/a'
         member.crew = driver.find_element_by_xpath(path).get_attribute("href").rsplit('/',1)[1]
 
-        print '[' + member.id + '] main crew: ' + member.crew
+        debug('[' + member.id + '] main crew: ' + member.crew)
 
         try:
             ## PSN ID
             path = '//div[@class="PSN"]/h5'
             member.psn = driver.find_element_by_xpath(path).text
         except:
-            member.psn = '--'
+            member.psn = ''
 
-        print '[' + member.id + '] PSN ID: ' + member.psn
+        debug('[' + member.id + '] PSN ID: ' + member.psn)
         
         try:
             ## Language
             path = '//div[@id="cardInfoFooter"]//span[contains(@class,"Country")]'
             member.country = driver.find_element_by_xpath(path).get_attribute("data-original-title")
         except:
-            member.country = '--'
+            member.country = ''
 
-        print '[' + member.id + '] country: ' + member.country
+        debug('[' + member.id + '] country: ' + member.country)
     
-        driver.get(member.url + '/'+ path_online_url)
+        driver.get(member.url + '/'+ path_gtav_base_url + '/ps3' + path_gtav_overview_url)
     
         path = '//div[@id="freemodeRank"]'
         result = WaitForElement(driver, path)
@@ -251,22 +256,44 @@ def GetMemberInfo(driver, member):
             debug('web - page fully loaded!')
 
         try:
-            ## Language
             path = '//div[@id="freemodeRank"]//h3'
-            member.rank = driver.find_element_by_xpath(path).text
+            member.level = driver.find_element_by_xpath(path).text
         except:
-            member.rank = '--'
+            member.level = ''
 
-        print '[' + member.id + '] rank: ' + member.rank
+        if member.level == 0:
+            member.platform = 'XBOX360'
+
+            driver.get(member.url + '/'+ path_gtav_base_url + '/xbox' + path_gtav_overview_url)
+    
+            path = '//div[@id="freemodeRank"]'
+            result = WaitForElement(driver, path)
+        
+            if not result:              # interprets returned value
+                #        driver.close()
+                sys.exit("\nThe page is not loaded yet.")
+            else:
+                debug('web - page fully loaded!')
+
+            try:
+                path = '//div[@id="freemodeRank"]//h3'
+                member.level = driver.find_element_by_xpath(path).text
+            except:
+                member.level = ''
+
+        else:
+            member.platform = 'PS3'
+
+        debug('[' + member.id + '] rank: ' + member.rank)
             
         try:
             ## Language
             path = '//div[@id="freemodeRank"]//div[@class="rankBar"]/h4'
             member.playtime = driver.find_element_by_xpath(path).text.rsplit(':',1)[1]
         except:
-            member.playtime = '--'
+            member.playtime = ''
 
-        print '[' + member.id + '] playtime: ' + member.playtime
+        debug('[' + member.id + '] playtime: ' + member.playtime)
     
         
 
@@ -300,7 +327,15 @@ if __name__ == "__main__":
         #if cnt > 2: sys.exit()
 
     for cm in crew_members:
-        print cm.id + ', ' + cm.country + ', ' + cm.psn + ', ' + cm.rank  + ', ' + cm.playtime
+        print   cm.id + ', ' \
+                + cm.country + ', ' \
+                + cm.psn + ', ' \
+                + cm.platform + ', ' \
+                + cm.crew + ', ' \
+                + cm.rank + ', ' \
+                + cm.level  + ', ' \
+                + cm.playtime + ', ' \
+                + cm.error
 
     driver.close()
 #### Log into social club
