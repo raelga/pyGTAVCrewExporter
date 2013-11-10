@@ -36,6 +36,9 @@ class crew_member:
 
 #### Function definitions
 
+def print_help():
+    print 'gtav_crew_exporter.py -c <crew_name> [-u <username> -p <password>] [-o <output_file>] [-v]'
+
 def arg_parser(argv):
     global crew_name
     global username
@@ -45,29 +48,28 @@ def arg_parser(argv):
     try:
         opts, args = getopt.getopt(argv,"hvu:p:c:o:",["verbose","username","password","crew=","ofile="])
     except getopt.GetoptError:
-        print 'gtav_crew_exporter.py -c <crew_name> [-u <username> -p <password>] [-o <output_file>] [-v]'
+        print_help()
         debug(2)
     for opt, arg in opts:
         if opt == '-h':
-            print 'gtav_crew_exporter.py -c <crew_name> [-u <username> -p <password>] [-o <output_file>] [-v]'
+            print_help()
             debug()
         elif opt in ("-c", "--crew"):
             crew_name = arg
         elif opt in ("-o", "--ofile"):
             output_file = arg
+            if not output_file: print_help()
         elif opt in ("-v", "--verbose"):
             verbose_flag = 1
         elif opt in ("-u", "--username"):
             username = arg
+            if not username: print_help()
         elif opt in ("-p", "--password"):
             password = arg
+            if not password: print_help()
 
     if not crew_name:
         crew_name = default_crew
-    print 'Crew: ' + crew_name
-
-    if output_file:
-        print 'Output file : ' + output_file
 
     return 0
 
@@ -318,6 +320,8 @@ if __name__ == "__main__":
     debug('web - starting browser')
     driver = webdriver.Firefox()
 
+    print 'Crew: ' + crew_name
+    
     crew_members = GetMembersList(driver)
     print 'Crew Size: ' + str(len(crew_members)) + ' members'
 
@@ -333,26 +337,31 @@ if __name__ == "__main__":
     for cm in crew_members:
         cm = GetMemberInfo(driver, cm)
 
-    f = open('output.csv','w')
-
+    if output_file:
+        f = open(output_file,'w')
+        
     for cm in crew_members:
         member_csv = str(cm.id) + ', ' \
-                + str(cm.country) + ', ' \
-                + str(cm.psn) + ', ' \
-                + str(cm.platform) + ', ' \
-                + str(cm.crew) + ', ' \
-                + str(cm.rank) + ', ' \
-                + str(cm.level)  + ', ' \
-                + str(cm.playtime) + ', ' \
-                + str(cm.error)
-        f.write(member_csv + '\n')
+                    + str(cm.country) + ', ' \
+                    + str(cm.psn) + ', ' \
+                    + str(cm.platform) + ', ' \
+                    + str(cm.crew) + ', ' \
+                    + str(cm.rank) + ', ' \
+                    + str(cm.level)  + ', ' \
+                    + str(cm.playtime) + ', ' \
+                    + str(cm.error)
+        if output_file:
+            f.write(member_csv + '\n')
+        else:
+            print member_csv
 
+    if output_file:
+        print 'Output saved as ' + output_file + '.'
+        f.close() # you can omit in most cases as the destructor will call if
       
-    f.close() # you can omit in most cases as the destructor will call if
     driver.close()
 
-    debug()
-
+    sys.exit()
 
     # Grab URL
     #url = str(sys.argv[1])

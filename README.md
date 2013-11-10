@@ -165,12 +165,24 @@ OrignalBEAST, United Kingdom, ORIGNALBEASSTT, PS3, lossantosdiamondz, muscle, 24
 raelga, Spain, raelga, PS3, elotrolado, muscle, 65,  6D 13H 53M, All ok.
 ```
 
+#### With member information (need login and password) and file as output
+
+** [505] rael@mbw:~/ws/gtav_crew_exporter$ ./gtav_crew_exporter.py -c the_pollasos -u raelga -p xxxxxxxxx **
+
+```
+./gtav_crew_exporter.py -c The_pollasos -u raelga -p ********* -o pollasos.csv
+Crew: The_pollasos
+Output file : pollasos.csv
+Crew Size: 9 members
+Output saved as pollasos.csv.
+```
+
 #### Verbose mode
 
 ** [505] rael@mbw:~/ws/gtav_crew_exporter$ ./gtav_crew_exporter.py -c the_pollasos -u raelga -p xxxxxxxxx -v **
 
 ```
-./gtav_crew_exporter.py -v -c the_pollasos -u raelga -p pocoyoGTA5
+./gtav_crew_exporter.py -v -c the_pollasos -u raelga -p *********
 Crew: the_pollasos
 DBG : web - starting browser
 DBG : web - page fully loaded!
