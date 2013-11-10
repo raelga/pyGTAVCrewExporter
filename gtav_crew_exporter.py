@@ -46,11 +46,11 @@ def arg_parser(argv):
         opts, args = getopt.getopt(argv,"hvu:p:c:o:",["verbose","username","password","crew=","ofile="])
     except getopt.GetoptError:
         print 'gtav_crew_exporter.py -c <crew_name> [-u <username> -p <password>] [-o <output_file>] [-v]'
-        sys.exit(2)
+        debug(2)
     for opt, arg in opts:
         if opt == '-h':
             print 'gtav_crew_exporter.py -c <crew_name> [-u <username> -p <password>] [-o <output_file>] [-v]'
-            sys.exit()
+            debug()
         elif opt in ("-c", "--crew"):
             crew_name = arg
         elif opt in ("-o", "--ofile"):
@@ -104,7 +104,7 @@ def LoginSocialClub(driver):
 
     if not result:              # interprets returned value
     #        driver.close()
-        sys.exit("\nThe page is not loaded yet.")
+        debug("\nThe page is not loaded yet.")
     else:
         debug('web - page fully loaded!')
 
@@ -126,7 +126,7 @@ def LoginSocialClub(driver):
 
     if not result:              # interprets returned value
     #        driver.close()
-        sys.exit("\nThe page is not loaded yet.")
+        debug("\nThe page is not loaded yet.")
     else:
         debug('web - page fully loaded!')
 
@@ -144,7 +144,7 @@ def GetMembersList(driver):
 
     if not result:              # interprets returned value
     #        driver.close()
-        sys.exit("\nThe page is not loaded yet.")
+        debug("\nThe page is not loaded yet.")
     else:
         debug('web - page fully loaded!')
         
@@ -199,17 +199,26 @@ def GetMemberInfo(driver, member):
 
     debug('[' + member.id + ']')
     
-    ## Load profile page
-    driver.get(member.url)
-        
-    path = '//*[@id="cardInfoVitals"]'
-    result = WaitForElement(driver, path)
 
-    if not result:              # interprets returned value
-    #        driver.close()
-        sys.exit("\nThe page is not loaded yet.")
-    else:
-        debug('web - page fully loaded!')
+    retry = 0
+    max_retry = 5
+
+    # Add retry to avoid errors
+    for rety in range(max_retry): 
+
+        ## Load profile page
+        driver.get(member.url)
+        
+        path = '//*[@id="cardInfoVitals"]'
+        result = WaitForElement(driver, path)
+
+        if not result:              # interprets returned value
+        #        driver.close()
+            debug("web - The page is not loaded yet. [" + str(retry) + "]")
+            retry += 1
+        else:
+            debug('web - page fully loaded! [' + str(retry) + ']')
+            break
 
     ## Check if profile is private
 
@@ -252,7 +261,7 @@ def GetMemberInfo(driver, member):
         
         if not result:              # interprets returned value
             #        driver.close()
-            sys.exit("\nThe page is not loaded yet.")
+            debug("\nThe page is not loaded yet.")
         else:
             debug('web - page fully loaded!')
 
@@ -272,7 +281,7 @@ def GetMemberInfo(driver, member):
         
             if not result:              # interprets returned value
                 #        driver.close()
-                sys.exit("\nThe page is not loaded yet.")
+                debug("\nThe page is not loaded yet.")
             else:
                 debug('web - page fully loaded!')
 
@@ -319,29 +328,30 @@ if __name__ == "__main__":
         for cm in crew_members:
             print cm.rank + ", " + cm.id + ", " + cm.url
 
-        sys.exit('You need to provide login information to view each member info.')
+        debug('You need to provide login information to view each member info.')
 
-    cnt = 0
     for cm in crew_members:
         cm = GetMemberInfo(driver, cm)
-        #cnt = cnt + 1
-        #if cnt > 2: sys.exit()
+
+    f = open('output.csv','w')
 
     for cm in crew_members:
-        print   cm.id + ', ' \
-                + cm.country + ', ' \
-                + cm.psn + ', ' \
-                + cm.platform + ', ' \
-                + cm.crew + ', ' \
-                + cm.rank + ', ' \
-                + cm.level  + ', ' \
-                + cm.playtime + ', ' \
-                + cm.error
+        member_csv = str(cm.id) + ', ' \
+                + str(cm.country) + ', ' \
+                + str(cm.psn) + ', ' \
+                + str(cm.platform) + ', ' \
+                + str(cm.crew) + ', ' \
+                + str(cm.rank) + ', ' \
+                + str(cm.level)  + ', ' \
+                + str(cm.playtime) + ', ' \
+                + str(cm.error)
+        f.write(member_csv + '\n')
 
+      
+    f.close() # you can omit in most cases as the destructor will call if
     driver.close()
-#### Log into social club
 
-    sys.exit()
+    debug()
 
 
     # Grab URL
@@ -358,4 +368,4 @@ if __name__ == "__main__":
     #if vurl:
     #	print ("Good url : %s" % url)
     #else:
-    #	sys.exit ("Malformed url : %s" % url)
+    #	debug ("Malformed url : %s" % url)
